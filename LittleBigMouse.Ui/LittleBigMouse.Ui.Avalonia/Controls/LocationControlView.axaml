@@ -1,0 +1,239 @@
+﻿<UserControl x:Class="LittleBigMouse.Ui.Avalonia.Controls.LocationControlView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:icons="clr-namespace:HLab.Icons.Avalonia.Icons;assembly=HLab.Icons.Avalonia"
+             xmlns:controls="clr-namespace:LittleBigMouse.Ui.Avalonia.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="200" d:DesignWidth="800"
+             x:DataType="controls:LocationControlViewModel"
+             x:CompileBindings="True"
+             >
+	<Design.DataContext>
+		<controls:LocationControlViewModelDesign/>
+	</Design.DataContext>
+
+	<UserControl.Styles>
+
+		<Style Selector="ListBox.RadioButtonListBox">
+			<Setter Property="BorderBrush" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBox.RadioButtonListBox ListBoxItem">
+			<Setter Property="Padding" Value="6,3,6,4" />
+			<Setter Property="BorderBrush" Value="Transparent" />
+
+			<Style Selector="^:selected">
+				<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+					<Setter Property="Background" Value="Transparent" />
+				</Style>
+			</Style>
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Transparent" />
+			</Style>
+		</Style>
+
+		<Style Selector="Button.Command">
+			<Setter Property="MinWidth" Value="50"/>
+			<Setter Property="Margin" Value="5,0,0,0" />
+		</Style>
+
+		<Style Selector="Button.Command:disabled /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Opacity" Value="0.25"/>
+			<Setter Property="OpacityMask" Value="Black"/>
+		</Style>
+		<Style Selector="StackPanel.Options">
+			<Setter Property="Orientation" Value="Vertical"/>
+			<Setter Property="Margin" Value="5,0,0,0"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid Margin="20">
+		<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="0.051" OpacityMask="Gray">
+			<icons:IconView
+                Foreground="Black"
+				IconMaxHeight="100"
+                Path="icon/lbm_logo"
+            />
+			<Label FontSize="100" Foreground="{DynamicResource ThemeForegroundBrush}">Little Big Mouse</Label>
+		</StackPanel>
+
+		<!-- 汉化相关 -->
+
+		<!--<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">-->
+		<!---->
+		<WrapPanel Margin="5" HorizontalAlignment="Right" Orientation="Horizontal">
+			<!--<StackPanel Orientation="Vertical" Margin="5,0,0,0" VerticalAlignment="Center">
+                    <CheckBox  Content="Home Cinema" IsChecked="{Binding Path=Config.HomeCinema, Mode=TwoWay}" Foreground="LightGray"/>
+                </StackPanel>-->
+			<StackPanel Classes="Options">
+				<Label
+					ToolTip.Tip="选择处理屏幕转换的算法。"
+        >最大移动距离</Label>
+
+				<NumericUpDown 
+                    Minimum="{Binding Model.MinimalMaxTravelDistance, FallbackValue=0}" 
+                    Increment="10" 
+                    Value="{Binding Model.MaxTravelDistance, FallbackValue=200.0}"
+                    ClipValueToMinMax="True"
+                    />
+			</StackPanel>
+			<StackPanel Classes="Options">
+				<CheckBox
+					Content="水平循环"
+
+					IsEnabled="{Binding Path=Model.LoopAllowed, FallbackValue=false}"
+					IsChecked="{Binding Path=Model.LoopX, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="允许光标从另一侧水平返回。"
+                        />
+				<CheckBox
+					Content="垂直循环"
+					IsEnabled="{Binding Path=Model.LoopAllowed, FallbackValue=false}"
+					IsChecked="{Binding Path=Model.LoopY, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="允许光标从另一侧垂直返回"
+                        />
+			</StackPanel>
+
+			<StackPanel  Classes="Options">
+				<CheckBox
+					Content="允许重叠"
+					IsChecked="{Binding Path=Model.AllowOverlaps, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="允许屏幕重叠"
+                        />
+
+				<CheckBox
+					Content="允许不连续"
+					IsChecked="{Binding Path=Model.AllowDiscontinuity, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="显示器之间留有间隙"
+                        />
+
+				<!--<CheckBox   Content="Show Rulers" IsChecked="{Binding Path=ShowRulers, Mode=TwoWay}" Foreground="LightGray" />-->
+			</StackPanel>
+
+			<StackPanel Classes="Options">
+				<CheckBox
+					Content="调整速度"
+					IsEnabled="{Binding Path=Model.AdjustSpeedAllowed, FallbackValue=false}"
+					IsChecked="{Binding Path=Model.AdjustSpeed, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="系统不考虑屏幕比例时调整指针速度"
+                        />
+				<CheckBox
+					Content="调整指针"
+					IsEnabled="{Binding Path=Model.AdjustPointerAllowed, FallbackValue=false}"
+					IsChecked="{Binding Path=Model.AdjustPointer, Mode=TwoWay, FallbackValue=false}"
+					ToolTip.Tip="系统不考虑屏幕比例时调整指针大小"
+                        />
+			</StackPanel>
+
+			<StackPanel Classes="Options">
+				<Label
+					ToolTip.Tip="选择处理屏幕转换的算法"
+                        >算法</Label>
+
+				<ListBox Classes="RadioButtonListBox"
+						 Background="Transparent"
+						 ItemsSource="{Binding AlgorithmList}"
+							 
+						 SelectedItem="{Binding SelectedAlgorithm}"
+                             >
+
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Border Background="Transparent">
+								<RadioButton Classes="RadioButtonListBox"
+									x:DataType="controls:ListItem"
+									Content="{Binding Caption}"
+									Background="Transparent"
+									VerticalAlignment="Center"
+									IsChecked="{Binding Path=IsSelected,RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}},Mode=TwoWay}"
+									ToolTip.Tip ="{Binding Description}"
+                                        />
+							</Border>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+
+				</ListBox>
+			</StackPanel>
+
+			<StackPanel Classes="Options">
+
+			</StackPanel>
+
+			<StackPanel Classes="Options">
+				<!--
+				<CheckBox
+					Content="自动检查更新"
+					IsChecked="{Binding Path=Model.AutoUpdate, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="启用自动后台检查以获取在线更新"
+                        />
+				-->
+
+				<CheckBox
+					Content="启动时加载"
+					IsChecked="{Binding Path=Model.LoadAtStartup, FallbackValue=false, Mode=TwoWay}"
+					ToolTip.Tip="在会话启动时启用执行"
+                        />
+
+				<Label>守护进程优先级</Label>
+				<ComboBox
+					ItemsSource="{Binding PriorityList}"
+					SelectedItem="{Binding SelectedPriority}">
+
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<Border Background="Transparent">
+								<Label Classes="RadioButtonListBox"
+									   x:DataType="controls:ListItem"
+									   Content="{Binding Caption}"
+									   Background="Transparent"
+									   VerticalAlignment="Center"
+									   ToolTip.Tip ="{Binding Description}"
+                                    />
+							</Border>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+
+				</ComboBox>
+
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal">
+
+				<Button Classes="Command"
+					Click="Button_Click">
+					<ToolTip.Tip>将配置复制到剪贴板</ToolTip.Tip>
+					<icons:IconView Height="30" Path="Icon/CopyConfig"/>
+				</Button>
+
+				<Button Classes="Command"
+					Command="{Binding SaveCommand}">
+					<ToolTip.Tip>保存</ToolTip.Tip>
+					<icons:IconView Height="30" Path="Icon/Save"/>
+				</Button>
+
+				<Button Classes="Command"
+					Command="{Binding StartCommand}">
+					<ToolTip.Tip>应用/开始</ToolTip.Tip>
+					<icons:IconView Height="30" Path="Icon/Start"/>
+				</Button>
+
+				<Button Classes="Command"
+					Command="{Binding StopCommand}">
+					<ToolTip.Tip>停止</ToolTip.Tip>
+					<icons:IconView Height="30" Path="Icon/Stop"/>
+				</Button>
+
+				<Button Classes="Command"
+					Command="{Binding UndoCommand}">
+					<ToolTip.Tip>撤消</ToolTip.Tip>
+					<icons:IconView Height="30" Path="Icon/Undo"/>
+				</Button>
+
+			</StackPanel>
+		</WrapPanel>
+
+	</Grid>
+</UserControl>

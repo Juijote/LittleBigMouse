@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Version>2.2.0.0</Version>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HLab.Core.Annotations\HLab.Core.Annotations.csproj" />
+  </ItemGroup>
+
+</Project>
